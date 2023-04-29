@@ -1,5 +1,6 @@
 package com.driver.controllers;
 
+import com.driver.Dto.SpotResponseDto;
 import com.driver.services.ParkingLotService;
 import com.driver.services.impl.ParkingLotServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +28,10 @@ public class ParkingLotController {
     }
 
     @PostMapping("/{parkingLotId}/spot/add")
-    public ResponseEntity<Spot> addSpot(@PathVariable int parkingLotId, @RequestParam Integer numberOfWheels, @RequestParam Integer pricePerHour) {
+    public ResponseEntity<SpotResponseDto> addSpot(@PathVariable int parkingLotId, @RequestParam Integer numberOfWheels, @RequestParam Integer pricePerHour) {
         //create a new spot in the parkingLot with given id
         //the spot type should be the next biggest type in case the number of wheels are not 2 or 4, for 4+ wheels, it is others
-        Spot newSpot= parkingLotService.addSpot(parkingLotId,numberOfWheels,pricePerHour);
+        SpotResponseDto newSpot= parkingLotService.addSpot(parkingLotId,numberOfWheels,pricePerHour);
         return new ResponseEntity<>(newSpot, HttpStatus.CREATED);
     }
 
@@ -41,9 +42,9 @@ public class ParkingLotController {
     }
 
     @PutMapping("/{parkingLotId}/spot/{spotId}/update")
-    public ResponseEntity<Spot> updateSpot(@PathVariable int parkingLotId, @PathVariable int spotId, @RequestParam int pricePerHour) {
+    public ResponseEntity<SpotResponseDto> updateSpot(@PathVariable int parkingLotId, @PathVariable int spotId, @RequestParam int pricePerHour, @RequestParam boolean occupied, @RequestParam int numberOfWheels) {
         //update the details of a spot
-        Spot updatedSpot = parkingLotService.updateSpot(parkingLotId,spotId,pricePerHour);
+        SpotResponseDto updatedSpot = parkingLotService.updateSpot(parkingLotId,spotId,pricePerHour,occupied, numberOfWheels);
         return new ResponseEntity<>(updatedSpot, HttpStatus.OK);
     }
 

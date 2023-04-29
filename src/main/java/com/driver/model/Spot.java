@@ -16,6 +16,7 @@ public class Spot {
     @Enumerated(EnumType.STRING)
     private SpotType spotType;
 
+    private int numberOfWheels;
     private int pricePerHour;
 
     private Boolean occupied;
@@ -24,9 +25,10 @@ public class Spot {
 
     }
 
-    public Spot(int id, SpotType spotType, int pricePerHour, Boolean occupied, ParkingLot parkingLot, List<Reservation> reservationList) {
+    public Spot(int id, SpotType spotType, int numberOfWheels, int pricePerHour, Boolean occupied, ParkingLot parkingLot, List<Reservation> reservationList) {
         this.id = id;
         this.spotType = spotType;
+        this.numberOfWheels = numberOfWheels;
         this.pricePerHour = pricePerHour;
         this.occupied = occupied;
         this.parkingLot = parkingLot;
@@ -47,6 +49,14 @@ public class Spot {
 
     public void setSpotType(SpotType spotType) {
         this.spotType = spotType;
+    }
+
+    public int getNumberOfWheels() {
+        return numberOfWheels;
+    }
+
+    public void setNumberOfWheels(int numberOfWheels) {
+        this.numberOfWheels = numberOfWheels;
     }
 
     public int getPricePerHour() {

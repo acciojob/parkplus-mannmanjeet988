@@ -9,6 +9,8 @@ import com.driver.services.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ReservationServiceImpl implements ReservationService {
     @Autowired
@@ -22,6 +24,29 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public Reservation reserveSpot(Integer userId, Integer parkingLotId, Integer timeInHours, Integer numberOfWheels) throws Exception {
     Reservation reservation = new Reservation();
+
+//    ParkingLot parkingLot;
+//    User user;
+        Spot finalSpot;
+        int minTotalPrice = Integer.MAX_VALUE;
+    if((parkingLotRepository3.findById(parkingLotId).get() != null)  &&  (userRepository3.findById(userId).get() != null)  )
+    {
+        ParkingLot parkingLot = parkingLotRepository3.findById(parkingLotId).get();
+        User user = userRepository3.findById(userId).get();
+        List<Spot> spotList =  parkingLot.getSpotList();
+        for(Spot spot : spotList){
+           if(spot.getNumberOfWheels() >= numberOfWheels){
+                minTotalPrice = Math.min((spot.getPricePerHour()*timeInHours),minTotalPrice);
+                finalSpot=spot;
+               reservation.setSpot(finalSpot);
+           }
+        }
+        reservation.setUser(user);
+    }
+    else {
+        throw new Exception("Cannot make reservation");
+    }
+
     return reservation;
     }
 }

@@ -9,16 +9,16 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private int numberOfHours;
+    private int timeInHours;
 
     public Reservation(){
 
     }
 
 
-    public Reservation(int id, int numberOfHours, User user, Spot spot, Payment payment) {
+    public Reservation(int id, int timeInHours, User user, Spot spot, Payment payment) {
         this.id = id;
-        this.numberOfHours = numberOfHours;
+        this.timeInHours = timeInHours;
         this.user = user;
         this.spot = spot;
         this.payment = payment;
@@ -33,12 +33,12 @@ public class Reservation {
         this.id = id;
     }
 
-    public int getNumberOfHours() {
-        return numberOfHours;
+    public int getTimeInHours() {
+        return timeInHours;
     }
 
-    public void setNumberOfHours(int numberOfHours) {
-        this.numberOfHours = numberOfHours;
+    public void setTimeInHours(int timeInHours) {
+        this.timeInHours = timeInHours;
     }
 
     public User getUser() {

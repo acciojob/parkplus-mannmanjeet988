@@ -1,5 +1,6 @@
 package com.driver.services.impl;
 
+import com.driver.Dto.ReservationResponseDto;
 import com.driver.model.*;
 import com.driver.repository.ParkingLotRepository;
 import com.driver.repository.ReservationRepository;
@@ -22,8 +23,9 @@ public class ReservationServiceImpl implements ReservationService {
     @Autowired
     ParkingLotRepository parkingLotRepository3;
     @Override
-    public Reservation reserveSpot(Integer userId, Integer parkingLotId, Integer timeInHours, Integer numberOfWheels) throws Exception {
+    public ReservationResponseDto reserveSpot(Integer userId, Integer parkingLotId, Integer timeInHours, Integer numberOfWheels) throws Exception {
     Reservation reservation = new Reservation();
+        ReservationResponseDto reservationResponseDto = new ReservationResponseDto();
 
 //    ParkingLot parkingLot;
 //    User user;
@@ -34,6 +36,7 @@ public class ReservationServiceImpl implements ReservationService {
         ParkingLot parkingLot = parkingLotRepository3.findById(parkingLotId).get();
         User user = userRepository3.findById(userId).get();
         List<Spot> spotList =  parkingLot.getSpotList();
+        int totalPrice;
         for(Spot spot : spotList){
            if(spot.getNumberOfWheels() >= numberOfWheels){
                 minTotalPrice = Math.min((spot.getPricePerHour()*timeInHours),minTotalPrice);
@@ -41,12 +44,22 @@ public class ReservationServiceImpl implements ReservationService {
                reservation.setSpot(finalSpot);
            }
         }
+        reservation.setTimeInHours(timeInHours);
         reservation.setUser(user);
+        reservationRepository3.save(reservation);
+
+        // prepare reservation response dto
+        reservationResponseDto.setTimeInHours(reservation.getTimeInHours());
+        reservationResponseDto.setSpotId(reservation.getSpot().getId());
+        reservationResponseDto.setUserName(reservation.getUser().getName());
+        reservationResponseDto.setParkingLotId(reservation.getSpot().getParkingLot().getId());
+
     }
+
     else {
         throw new Exception("Cannot make reservation");
     }
 
-    return reservation;
+    return reservationResponseDto;
     }
 }

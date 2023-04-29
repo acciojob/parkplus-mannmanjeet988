@@ -1,5 +1,7 @@
 package com.driver.services.impl;
 
+import com.driver.Dto.PaymentResponseDto;
+import com.driver.Dto.ReservationResponseDto;
 import com.driver.model.Enums.PaymentMode;
 import com.driver.model.Payment;
 import com.driver.model.Reservation;
@@ -18,7 +20,7 @@ public class PaymentServiceImpl implements PaymentService {
     PaymentRepository paymentRepository2;
 
     @Override
-    public Payment pay(Integer reservationId, int amountSent, String mode) throws Exception {
+    public PaymentResponseDto pay(Integer reservationId, int amountSent, String mode) throws Exception {
         Payment payment = new Payment();
 
         Reservation reservation = reservationRepository2.findById(reservationId).get();
@@ -32,9 +34,22 @@ public class PaymentServiceImpl implements PaymentService {
         }
 
         payment.setPaymentCompleted(true);
-        payment.setPaymentMode(PaymentMode.CARD);
+        payment.setPaymentMode(PaymentMode.valueOf(mode));
         payment.setReservation(reservation);
+        paymentRepository2.save(payment);
 
-        return  payment;
+        ReservationResponseDto reservationResponseDto = new ReservationResponseDto();
+        reservationResponseDto.setParkingLotId(reservation.getSpot().getParkingLot().getId());
+        reservationResponseDto.setTimeInHours(reservation.getTimeInHours());
+        reservationResponseDto.setSpotId(reservation.getSpot().getId());
+        reservationResponseDto.setUserName(reservation.getUser().getName());
+
+        PaymentResponseDto paymentResponseDto = new PaymentResponseDto();
+        paymentResponseDto.setPaymentCompleted(true);
+        paymentResponseDto.setPaymentMode(mode);
+        paymentResponseDto.setReservationResponseDto(reservationResponseDto);
+
+
+        return  paymentResponseDto;
     }
 }
